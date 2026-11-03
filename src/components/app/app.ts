@@ -7,7 +7,7 @@ class App {
         private view: AppView = new AppView()
     ) {}
 
-    start(): void {
+    public start(): void {
         const sourcesElement = document.querySelector<HTMLElement>('.sources');
 
         if (!sourcesElement) throw new Error('Sources element not found');

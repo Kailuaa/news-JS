@@ -1,17 +1,17 @@
 import AppLoader from './appLoader';
-import { SourcesResponse, NewsResponse } from '../../types';
+import { SourcesResponse, NewsResponse, ApiEndpoint } from '../../types';
 
 class AppController extends AppLoader {
-    getSources(callback: (data: SourcesResponse) => void): void {
+    public getSources(callback: (data: SourcesResponse) => void): void {
         super.getResp(
             {
-                endpoint: 'sources',
+                endpoint: ApiEndpoint.SOURCES,
             },
             callback
         );
     }
 
-    getNews(e: MouseEvent, callback: (data: NewsResponse) => void): void {
+    public getNews(e: MouseEvent, callback: (data: NewsResponse) => void): void {
         let target: Element | null = e.target instanceof Element ? e.target : null;
         const newsContainer = e.currentTarget;
 
@@ -29,7 +29,7 @@ class AppController extends AppLoader {
                     newsContainer.setAttribute('data-source', sourceId);
                     super.getResp(
                         {
-                            endpoint: 'everything',
+                            endpoint: ApiEndpoint.EVERYTHING,
                             options: {
                                 sources: sourceId,
                             },

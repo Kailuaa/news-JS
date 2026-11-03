@@ -1,8 +1,8 @@
 import './news.css';
-import { Article } from '../../../types';
+import { Article, ArticlePreview } from '../../../types';
 
 class News {
-    draw(data: Article[]): void {
+    public draw(data: Article[]): void {
         const news = data.length >= 10 ? data.filter((_item, idx) => idx < 10) : data;
 
         const fragment = document.createDocumentFragment();
@@ -38,8 +38,13 @@ class News {
             const newsDescription = newsClone.querySelector<HTMLElement>('.news__description-content');
             if (newsDescription) newsDescription.textContent = item.description;
 
+            const articlePreview: ArticlePreview = {
+                title: item.title,
+                url: item.url,
+            };
+
             const newsLink = newsClone.querySelector<HTMLAnchorElement>('.news__read-more a');
-            if (newsLink) newsLink.setAttribute('href', item.url);
+            if (newsLink) newsLink.setAttribute('href', articlePreview.url);
 
             fragment.append(newsClone);
         });

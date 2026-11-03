@@ -15,10 +15,17 @@ export interface Article {
     url: string;
 }
 
+export type ArticlePreview = Pick<Article, 'title' | 'url'>;
+
 export interface SourcesResponse {
     sources: Source[];
 }
 
 export interface NewsResponse {
     articles: Article[];
+}
+
+export enum ApiEndpoint {
+    SOURCES = 'sources',
+    EVERYTHING = 'everything',
 }

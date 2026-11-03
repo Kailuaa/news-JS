@@ -8,12 +8,12 @@ export class AppView {
         private sources: Sources = new Sources()
     ) {}
 
-    drawNews(data: NewsResponse): void {
+    public drawNews(data: NewsResponse): void {
         const values = data?.articles ? data?.articles : [];
         this.news.draw(values);
     }
 
-    drawSources(data: SourcesResponse): void {
+    public drawSources(data: SourcesResponse): void {
         const values = data?.sources ? data?.sources : [];
         this.sources.draw(values);
     }

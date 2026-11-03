@@ -1,4 +1,5 @@
-type RequestOptions = Record<string, string>;
+type RequestOptions = Partial<Record<'sources', string>>;
+type BaseOptions = Readonly<Record<string, string>>;
 
 interface RequestParams {
     endpoint: string;
@@ -8,10 +9,10 @@ interface RequestParams {
 class Loader {
     constructor(
         private baseLink: string,
-        private options: RequestOptions
+        private options: BaseOptions
     ) {}
 
-    getResp<T>(
+    public getResp<T>(
         { endpoint, options = {} }: RequestParams,
         callback: (data: T) => void = () => {
             console.error('No callback for GET response');
@@ -20,7 +21,7 @@ class Loader {
         this.load<T>('GET', endpoint, callback, options);
     }
 
-    errorHandler(res: Response): Response {
+    public errorHandler(res: Response): Response {
         if (!res.ok) {
             if (res.status === 401 || res.status === 404)
                 console.log(`Sorry, but there is ${res.status} error: ${res.statusText}`);
@@ -30,18 +31,20 @@ class Loader {
         return res;
     }
 
-    makeUrl(options: RequestOptions, endpoint: string): string {
+    public makeUrl(options: RequestOptions, endpoint: string): string {
         const urlOptions = { ...this.options, ...options };
-        let url = `${this.baseLink}${endpoint}?`;
+        const params = new URLSearchParams();
 
-        Object.keys(urlOptions).forEach((key) => {
-            url += `${key}=${urlOptions[key]}&`;
+        Object.entries(urlOptions).forEach(([key, value]) => {
+            if (value !== undefined) {
+                params.append(key, value);
+            }
         });
 
-        return url.slice(0, -1);
+        return `${this.baseLink}${endpoint}?${params.toString()}`;
     }
 
-    load<T>(method: 'GET', endpoint: string, callback: (data: T) => void, options: RequestOptions = {}): void {
+    public load<T>(method: 'GET', endpoint: string, callback: (data: T) => void, options: RequestOptions = {}): void {
         fetch(this.makeUrl(options, endpoint), { method })
             .then(this.errorHandler)
             .then((res) => res.json() as Promise<T>)
